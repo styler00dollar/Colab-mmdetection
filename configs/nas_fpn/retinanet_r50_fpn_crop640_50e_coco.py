@@ -5,7 +5,6 @@ _base_ = [
 cudnn_benchmark = True
 norm_cfg = dict(type='BN', requires_grad=True)
 model = dict(
-    pretrained='torchvision://resnet50',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -14,7 +13,8 @@ model = dict(
         frozen_stages=1,
         norm_cfg=norm_cfg,
         norm_eval=False,
-        style='pytorch'),
+        style='pytorch',
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
         relu_before_extra_convs=True,
         no_norm_on_lateral=True,
@@ -77,4 +77,4 @@ lr_config = dict(
     warmup_ratio=0.1,
     step=[30, 40])
 # runtime settings
-total_epochs = 50
+runner = dict(type='EpochBasedRunner', max_epochs=50)

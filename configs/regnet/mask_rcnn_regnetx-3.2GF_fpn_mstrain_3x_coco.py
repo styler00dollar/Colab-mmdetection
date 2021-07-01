@@ -4,7 +4,6 @@ _base_ = [
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
 model = dict(
-    pretrained='open-mmlab://regnetx_3.2gf',
     backbone=dict(
         _delete_=True,
         type='RegNet',
@@ -13,7 +12,9 @@ model = dict(
         frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
-        style='pytorch'),
+        style='pytorch',
+        init_cfg=dict(
+            type='Pretrained', checkpoint='open-mmlab://regnetx_3.2gf')),
     neck=dict(
         type='FPN',
         in_channels=[96, 192, 432, 1008],
@@ -60,6 +61,6 @@ data = dict(
     test=dict(pipeline=test_pipeline))
 optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.00005)
 lr_config = dict(step=[28, 34])
-total_epochs = 36
+runner = dict(type='EpochBasedRunner', max_epochs=36)
 optimizer_config = dict(
     _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))

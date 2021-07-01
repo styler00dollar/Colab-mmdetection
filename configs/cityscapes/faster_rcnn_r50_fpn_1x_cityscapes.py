@@ -4,7 +4,7 @@ _base_ = [
     '../_base_/default_runtime.py'
 ]
 model = dict(
-    pretrained=None,
+    backbone=dict(init_cfg=None),
     roi_head=dict(
         bbox_head=dict(
             type='Shared2FCBBoxHead',
@@ -32,7 +32,8 @@ lr_config = dict(
     warmup_ratio=0.001,
     # [7] yields higher performance than [6]
     step=[7])
-total_epochs = 8  # actual epoch = 8 * 8 = 64
+runner = dict(
+    type='EpochBasedRunner', max_epochs=8)  # actual epoch = 8 * 8 = 64
 log_config = dict(interval=100)
 # For better, more stable performance initialize from COCO
 load_from = 'https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'  # noqa

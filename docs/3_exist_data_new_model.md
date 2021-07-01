@@ -41,11 +41,11 @@ mmdetection
 
 ```
 
-The cityscapes annotations have to be converted into the coco format using `tools/convert_datasets/cityscapes.py`:
+The cityscapes annotations have to be converted into the coco format using `tools/dataset_converters/cityscapes.py`:
 
 ```shell
 pip install cityscapesscripts
-python tools/convert_datasets/cityscapes.py ./data/cityscapes --nproc 8 --out-dir ./data/cityscapes/annotations
+python tools/dataset_converters/cityscapes.py ./data/cityscapes --nproc 8 --out-dir ./data/cityscapes/annotations
 ```
 
 Currently the config files in `cityscapes` use COCO pre-trained weights to initialize.
@@ -251,7 +251,7 @@ lr_config = dict(
 total_epochs = 10
 
 # We can use the COCO pretrained Cascade Mask R-CNN R50 model for more stable performance initialization
-load_from = 'http://download.openmmlab.com/mmdetection/v2.0/cascade_rcnn/cascade_mask_rcnn_r50_fpn_1x_coco/cascade_mask_rcnn_r50_fpn_1x_coco_20200203-9d4dcb24.pth'
+load_from = 'https://download.openmmlab.com/mmdetection/v2.0/cascade_rcnn/cascade_mask_rcnn_r50_fpn_1x_coco/cascade_mask_rcnn_r50_fpn_1x_coco_20200203-9d4dcb24.pth'
 ```
 
 ## Train a new model

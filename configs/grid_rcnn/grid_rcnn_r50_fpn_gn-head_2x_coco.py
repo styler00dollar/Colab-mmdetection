@@ -4,7 +4,6 @@ _base_ = [
 # model settings
 model = dict(
     type='GridRCNN',
-    pretrained='torchvision://resnet50',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -13,7 +12,8 @@ model = dict(
         frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
-        style='pytorch'),
+        style='pytorch',
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
@@ -87,11 +87,9 @@ model = dict(
             pos_weight=-1,
             debug=False),
         rpn_proposal=dict(
-            nms_across_levels=False,
             nms_pre=2000,
-            nms_post=2000,
-            max_num=2000,
-            nms_thr=0.7,
+            max_per_img=2000,
+            nms=dict(type='nms', iou_threshold=0.7),
             min_bbox_size=0),
         rcnn=dict(
             assigner=dict(
@@ -112,11 +110,9 @@ model = dict(
             debug=False)),
     test_cfg=dict(
         rpn=dict(
-            nms_across_levels=False,
             nms_pre=1000,
-            nms_post=1000,
-            max_num=1000,
-            nms_thr=0.7,
+            max_per_img=1000,
+            nms=dict(type='nms', iou_threshold=0.7),
             min_bbox_size=0),
         rcnn=dict(
             score_thr=0.03,
@@ -132,4 +128,4 @@ lr_config = dict(
     warmup_iters=3665,
     warmup_ratio=1.0 / 80,
     step=[17, 23])
-total_epochs = 25
+runner = dict(type='EpochBasedRunner', max_epochs=25)

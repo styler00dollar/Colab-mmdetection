@@ -5,7 +5,6 @@ _base_ = [
 # model settings
 model = dict(
     type='VFNet',
-    pretrained='torchvision://resnet50',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -14,14 +13,14 @@ model = dict(
         frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
-        style='pytorch'),
+        style='pytorch',
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
         start_level=1,
-        add_extra_convs=True,
-        extra_convs_on_inputs=False,  # use P5
+        add_extra_convs='on_output',  # use P5
         num_outs=5,
         relu_before_extra_convs=True),
     bbox_head=dict(
@@ -105,9 +104,4 @@ lr_config = dict(
     warmup_iters=500,
     warmup_ratio=0.1,
     step=[8, 11])
-total_epochs = 12
-
-# runtime
-load_from = None
-resume_from = None
-workflow = [('train', 1)]
+runner = dict(type='EpochBasedRunner', max_epochs=12)

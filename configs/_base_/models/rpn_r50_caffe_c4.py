@@ -1,7 +1,6 @@
 # model settings
 model = dict(
     type='RPN',
-    pretrained='open-mmlab://detectron2/resnet50_caffe',
     backbone=dict(
         type='ResNet',
         depth=50,
@@ -12,7 +11,10 @@ model = dict(
         frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=False),
         norm_eval=True,
-        style='caffe'),
+        style='caffe',
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint='open-mmlab://detectron2/resnet50_caffe')),
     neck=None,
     rpn_head=dict(
         type='RPNHead',
@@ -50,9 +52,7 @@ model = dict(
             debug=False)),
     test_cfg=dict(
         rpn=dict(
-            nms_across_levels=False,
             nms_pre=12000,
-            nms_post=2000,
-            max_num=2000,
-            nms_thr=0.7,
+            max_per_img=2000,
+            nms=dict(type='nms', iou_threshold=0.7),
             min_bbox_size=0)))

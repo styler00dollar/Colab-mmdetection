@@ -2,8 +2,11 @@ _base_ = '../_base_/default_runtime.py'
 # model settings
 model = dict(
     type='YOLOV3',
-    pretrained='open-mmlab://darknet53',
-    backbone=dict(type='Darknet', depth=53, out_indices=(3, 4, 5)),
+    backbone=dict(
+        type='Darknet',
+        depth=53,
+        out_indices=(3, 4, 5),
+        init_cfg=dict(type='Pretrained', checkpoint='open-mmlab://darknet53')),
     neck=dict(
         type='YOLOV3Neck',
         num_scales=3,
@@ -120,5 +123,5 @@ lr_config = dict(
     warmup_ratio=0.1,
     step=[218, 246])
 # runtime settings
-total_epochs = 273
+runner = dict(type='EpochBasedRunner', max_epochs=273)
 evaluation = dict(interval=1, metric=['bbox'])
